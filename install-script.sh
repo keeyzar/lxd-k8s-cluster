@@ -130,3 +130,28 @@ function full_install_nfs(){
     return 1
   fi
 }
+
+if [[ x"$1" -eq "xTrue" ]]; then
+  echo "requested to install lxd, starting."
+  if ! install_lxd_fully; then
+    echo "could not install lxd, stopping installation"
+    return 2
+  fi
+else
+  echo "skipped installation of lxd!"
+fi
+
+if ! setup_k8s_cluster; then
+  echo "setup k8s cluster failed, stopping installation"
+  return 3
+fi
+
+if ! install_metallb_fully; then
+  echo "setup metallb failed, stopping installation"
+  return 4
+fi
+
+if ! full_install_nfs; then
+  echo "setup nfs failed, stopping installation"
+  return 5
+fi
