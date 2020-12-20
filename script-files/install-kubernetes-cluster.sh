@@ -90,9 +90,12 @@ apiServer:
     service-account-signing-key-file: /etc/kubernetes/pki/sa.key
     service-account-api-audiences: api
 EOF
-lxc file push config.yaml $node/home/
+lxc file push config.yaml "$node"/home/
 lxc exec "$node" -- /bin/bash -c 'sudo kubeadm init --v=5 --config /home/config.yaml'
 rm config.yaml
+
+  echo "starting worker node"
+  lxc start "$node_worker_one"
 
   echo "joining worker node"
   joincmd=$(lxc exec "$node" -- /bin/bash -c 'sudo kubeadm token create --print-join-command | grep kubeadm')
@@ -100,7 +103,7 @@ rm config.yaml
 
 if [[ x$overwrite_kubeconfig -eq "xTrue" ]]; then
   echo "pulling kubeconfig file, possibly overwriting existing one"
-  lxc file pull $node/etc/kubernetes/admin.conf ~/.kube/config
+  lxc file pull "$node"/etc/kubernetes/admin.conf ~/.kube/config
   sudo chmod 600 /home/keeyzar/.kube/config
 else
   echo "skipping setting up kubeconfig, you may do it by yourself with the following commands"
