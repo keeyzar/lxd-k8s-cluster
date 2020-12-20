@@ -124,7 +124,7 @@ function full_install_nfs(){
   fi
 
   if verify_functionality; then
-    echo "functionality was verified - full installation successful, nfs volume binding is possible!"
+    echo "functionality was verified - full installation successful, nfs volume binding is possible! "
   else
     echo "final check was not successful - 'stopping' installation. lol."
     return 1
