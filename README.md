@@ -18,10 +18,10 @@ ubuntu focal host system, administrator privileges
 ## disclaimer
 execute with caution, on your own behalf
 
-## help
-if you want to help: 
+## contribute
+if you want to contribute: 
 - We can surely improve the automation script.
 - install a nfs-server in a container with e.g. user namespace nfs-server
 
-##part 1: automatically install lxd in ubuntu
+## part 1: automatically install lxd in ubuntu
 
