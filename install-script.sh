@@ -5,9 +5,9 @@ subdir="script-files"
 
 #no worries, everything is packed into functions
 source "${DIR}/${subdir}/lxd-install.sh"
-source "${DIR}/${subdir}/install_kubernetes_cluster.sh"
-source "${DIR}/${subdir}/install_metallb.sh"
-source "${DIR}/${subdir}/install_nfs.sh"
+source "${DIR}/${subdir}/install-kubernetes-cluster.sh"
+source "${DIR}/${subdir}/install-metallb.sh"
+source "${DIR}/${subdir}/install-nfs.sh"
 
 node="k8s-control-plane"
 worker="k8s-worker"
@@ -107,6 +107,7 @@ function full_install_nfs(){
     echo "couldn't install guest container software for nfs mounting - stopping installation"
     return 1
   fi
+
 
   if make_storage_class_and_rbac_rules; then
     echo "Storage class and rbac rules were created, nfs pod is allowed to create sc and more"
