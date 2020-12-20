@@ -22,11 +22,17 @@ function configure_host_system_for_lxd() {
   sudo swapoff -a
 
   #increase usable num of uids and gids, because we are going to nest muuch.
+
+  echo "increasing uid and gid space for root and user in /etc/subuid and /etc/subgid"
+  sudo sed -i '/root/d' /etc/subuid /etc/subgid
+  sudo sed -i "/$(whoami)/d" /etc/subuid /etc/subgid
+
   cat <<EOF | sudo tee -a /etc/subuid /etc/subgid
 root:100000:1000000000
 $(whoami):100000:1000000000
 EOF
 
+  echo "installing conntrack"
   #now install conntrack, if not yet installed on your system
   sudo apt install conntrack -y
 }
