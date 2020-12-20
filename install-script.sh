@@ -86,9 +86,9 @@ function install_metallb_fully(){
 }
 
 function full_install_nfs(){
-  echo "beginning configuring HOST system!"
+  echo "beginning configuring HOST system! "
   if install_nfs_server_on_host_and_start; then
-    echo "successfully installed nfs components on HOST system!"
+    echo "successfully installed nfs components on HOST system! "
   else
     echo "something went wrong while installing HOST system components, stopping installation"
     return 1

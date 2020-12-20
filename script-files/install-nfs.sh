@@ -66,7 +66,7 @@ function make_storage_class_and_rbac_rules(){
 function install_nfs_pod_provisioner(){
   echo "installing and configuring pod nfs provisioner"
   curl https://raw.githubusercontent.com/justmeandopensource/kubernetes/master/yamls/nfs-provisioner/deployment.yaml >nfs-deploy.yaml
-  cat nfs-deploy.yaml | sed "s/<<NFS Server IP>>/${hostipAddr}/" | sed "s|/var/nfs/kubedata|${$nfs_dir}|" >nfs-deploy-modified.yaml
+  cat nfs-deploy.yaml | sed "s/<<NFS Server IP>>/${hostipAddr}/" | sed "s|/var/nfs/kubedata|${nfs_dir}|" >nfs-deploy-modified.yaml
   kubectl apply -f nfs-prov/nfs-deploy-modified.yaml
   rm nfs-deploy.yaml
   rm nfs-deploy-modified.yaml
