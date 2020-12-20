@@ -52,7 +52,7 @@ function setup_k8s_cluster(){
     echo "calico was not installed, stopping"
   fi
 
-  if utilize_control_plane_as_worker; then
+  if utilize_control_plane_as_worker $node; then
     echo "successfully setup control plane as worker "
   else
     echo "wow a single command failed, i.e. untainting the control plane. something's fishy, stopping! "
@@ -135,7 +135,7 @@ if [[ "x$1" = "xTrue" ]]; then
   echo "requested to install lxd, starting."
   if ! install_lxd_fully; then
     echo "could not install lxd, stopping installation"
-    return 2
+    exit 2
   fi
 else
   echo "skipped installation of lxd!"
@@ -143,15 +143,15 @@ fi
 
 if ! setup_k8s_cluster; then
   echo "setup k8s cluster failed, stopping installation"
-  return 3
+  exit 3
 fi
 
 if ! install_metallb_fully; then
   echo "setup metallb failed, stopping installation"
-  return 4
+  exit 4
 fi
 
 if ! full_install_nfs; then
   echo "setup nfs failed, stopping installation"
-  return 5
+  exit 5
 fi

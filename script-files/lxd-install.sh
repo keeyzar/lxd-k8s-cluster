@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 #configure pc:
 #install lxc 4.0, conntrack
 function install_lxd() {

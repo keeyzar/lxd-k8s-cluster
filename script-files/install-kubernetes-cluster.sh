@@ -1,5 +1,5 @@
-node="k8s-controlplane"
-node_worker_one="k8s-workernode"
+#!/usr/bin/env bash
+
 function install_k8s_in_lxc(){
   node=$1
   node_worker_one=$2
@@ -41,21 +41,24 @@ cat << EOF >> daemon.json
 }
 EOF
 
-lxc exec $node -- /bin/bash -c 'mkdir /etc/docker' &&\
-lxc file push daemon.json $node/etc/docker/ &&\
+lxc exec $node -- /bin/bash -c 'mkdir /etc/docker'
+lxc file push daemon.json $node/etc/docker/
 rm daemon.json
 
 
 #now install k8s and docker on guest vm
 echo "installing software: k8s, kubeadm, docker into guest system"
+#we need to set kubernetes version to 1.19; 1.20 has some issues, which are yet not resolved
+#https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/issues/25
 lxc exec $node -- /bin/bash -c '\
+version="1.18.14-00"
 apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common conntrack &&\
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - &&\
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - &&\
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" &&\
 add-apt-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main" &&\
 apt-get update &&\
-apt-get install -y docker-ce kubelet kubeadm kubectl &&\
+apt-get install -y docker-ce kubelet=$version kubeadm=$version kubectl=$version &&\
 apt-mark hold kubelet kubeadm kubectl docker-ce &&\
 sudo systemctl enable kubelet &&\
 sudo systemctl start kubelet'
@@ -80,7 +83,7 @@ ipPoolCidr="10.244.0.0/16"
 cat << EOF > config.yaml
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: ClusterConfiguration
-kubernetesVersion: v1.20.0
+kubernetesVersion: v1.18.0
 networking:
   podSubnet: $ipPoolCidr
 apiServer:
@@ -90,9 +93,9 @@ apiServer:
     service-account-signing-key-file: /etc/kubernetes/pki/sa.key
     service-account-api-audiences: api
 EOF
-lxc file push config.yaml "$node"/home/
-lxc exec "$node" -- /bin/bash -c 'sudo kubeadm init --v=5 --config /home/config.yaml'
-rm config.yaml
+  lxc file push config.yaml "$node"/home/
+  lxc exec "$node" -- /bin/bash -c 'sudo kubeadm init --config /home/config.yaml'
+  rm config.yaml
 
   echo "starting worker node"
   lxc start "$node_worker_one"
@@ -124,5 +127,6 @@ function setup_calico(){
 }
 
 function utilize_control_plane_as_worker(){
-  kubectl taint nodes k8s-control-plane node-role.kubernetes.io/master-
+  node=$1
+  kubectl taint nodes $node node-role.kubernetes.io/master-
 }
