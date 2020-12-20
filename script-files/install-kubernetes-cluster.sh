@@ -101,7 +101,7 @@ rm config.yaml
   joincmd=$(lxc exec "$node" -- /bin/bash -c 'sudo kubeadm token create --print-join-command | grep kubeadm')
   lxc exec "$node_worker_one" -- bash -c "sudo $joincmd"
 
-if [[ x$overwrite_kubeconfig -eq "xTrue" ]]; then
+if [[ "x$overwrite_kubeconfig" = "xTrue" ]]; then
   echo "pulling kubeconfig file, possibly overwriting existing one"
   lxc file pull "$node"/etc/kubernetes/admin.conf ~/.kube/config
   sudo chmod 600 /home/$(whoami)/.kube/config
