@@ -53,9 +53,9 @@ function setup_k8s_cluster(){
   fi
 
   if utilize_control_plane_as_worker; then
-    echo "successfully setup control plane as worker"
+    echo "successfully setup control plane as worker "
   else
-    echo "wow a single command failed, i.e. untainting the control plane. something's fishy, stopping!"
+    echo "wow a single command failed, i.e. untainting the control plane. something's fishy, stopping! "
     return 1
   fi
 }
@@ -76,7 +76,7 @@ function install_metallb_fully(){
   fi
 
   if check_functionality_of_metallb; then
-    echo "successful check of metallb functionality!"
+    echo "successful check of metallb functionality! "
   else
     echo "couldn't reach the nginx ... metallb is not correctly configured"
     return 1

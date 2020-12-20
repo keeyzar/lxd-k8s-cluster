@@ -1,17 +1,21 @@
 #configure pc:
 #install lxc 4.0, conntrack
 function install_lxd() {
+  echo "update and install lxc in version 4.0.2"
   sudo apt update && \
-  sudo apt upgrade -y && \
   sudo apt install lxc=1:4.0.2-0ubuntu1 lxd=1:0.9 -y
-  #(choose 4.0 aus)
+
+  echo "add user to lxd group"
   sudo adduser $(whoami) lxd
-  #make groupe immediately effective without relogin
+
+  echo "add new group, making relogin obsolete"
   newgrp lxd
 }
 
 function configure_host_system_for_lxd() {
   #configure some kernel parameters, may not even necessary
+
+  echo "setting some kernel parameters"
   sudo sysctl fs.inotify.max_user_instances=1048576
   sudo sysctl fs.inotify.max_queued_events=1048576
   sudo sysctl fs.inotify.max_user_watches=1048576
@@ -19,6 +23,7 @@ function configure_host_system_for_lxd() {
 
   #disable swap space, because kubeadm does not like swap space.
   #on each restart required to redisable swap space!
+  echo "disabling swap space on HOST SYSTEM"
   sudo swapoff -a
 
   #increase usable num of uids and gids, because we are going to nest muuch.
@@ -39,7 +44,10 @@ EOF
 
 function configure_lxd() {
   #finally configure lxd via lxd init
+  echo "creating directory for lxd storage in /opt/lxd/storage-pools/default"
   sudo mkdir -p /opt/lxd/storage-pools/default
+
+  echo "configuring lxd"
   cat <<EOF | lxd init --preseed
 config: {}
 networks:

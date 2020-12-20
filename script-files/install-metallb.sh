@@ -38,7 +38,7 @@ external_ip="";
 while true; do
   sleep 5
   external_ip=$(kubectl get svc nginx --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}");
-  if [[ -z $external_ip ]]; then
+  if [[ $external_ip -eq "" ]]; then
     count=$((count+1))
   fi
 

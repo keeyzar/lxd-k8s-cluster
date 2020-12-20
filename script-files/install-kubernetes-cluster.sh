@@ -124,5 +124,5 @@ function setup_calico(){
 }
 
 function utilize_control_plane_as_worker(){
-  kubectl taint nodes --all node-role.kubernetes.io/master-
+  kubectl taint nodes k8s-control-plane node-role.kubernetes.io/master-
 }
