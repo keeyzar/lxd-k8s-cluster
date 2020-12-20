@@ -131,7 +131,7 @@ function full_install_nfs(){
   fi
 }
 
-if [[ x"$1" -eq "xTrue" ]]; then
+if [[ "x$1" -eq "xTrue" ]]; then
   echo "requested to install lxd, starting."
   if ! install_lxd_fully; then
     echo "could not install lxd, stopping installation"
