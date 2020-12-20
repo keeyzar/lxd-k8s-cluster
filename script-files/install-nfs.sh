@@ -70,6 +70,11 @@ function install_nfs_pod_provisioner(){
   sed -i "s|/srv/nfs/kubedata|${nfs_dir}|" nfs-deploy.yaml
   kubectl apply -f nfs-deploy.yaml
   rm nfs-deploy.yaml
+  if ! kubectl wait --for=condition=available --timeout=100s deployment/nfs-client-provisioner;then
+    echo "the pod was not correctly started, we waited 100 seconds.. this is really bad! "
+  else
+    echo "nfs pod successfully started! "
+  fi
 }
 
 function verify_functionality(){
@@ -85,12 +90,13 @@ spec:
     requests:
       storage: 200Mi
 EOF
+
   sleep 5
   found=0
   if kubectl get pvc | grep -q Bound; then
-    echo "found a bound pvc, nice!"
+    echo "found a bound pvc, nice! "
   else
-    echo "found no bound pvc... bad!"
+    echo "found no bound pvc... bad! "
     found=1
   fi
   kubectl delete pvc test-pvc
