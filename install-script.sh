@@ -12,7 +12,7 @@ source "${DIR}/${subdir}/install-nfs.sh"
 node="k8s-control-plane"
 worker="k8s-worker"
 
-function install_lxd() {
+function install_lxd_fully() {
   if install_lxd; then
     echo "successfully installed lxd"
   else
