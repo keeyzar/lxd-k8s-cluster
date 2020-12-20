@@ -104,11 +104,11 @@ rm config.yaml
 if [[ x$overwrite_kubeconfig -eq "xTrue" ]]; then
   echo "pulling kubeconfig file, possibly overwriting existing one"
   lxc file pull "$node"/etc/kubernetes/admin.conf ~/.kube/config
-  sudo chmod 600 /home/keeyzar/.kube/config
+  sudo chmod 600 /home/$(whoami)/.kube/config
 else
   echo "skipping setting up kubeconfig, you may do it by yourself with the following commands"
   echo "lxc file pull $node/etc/kubernetes/admin.conf ~/.kube/config"
-  echo "sudo chmod 600 /home/keeyzar/.kube/config"
+  echo "sudo chmod 600 /home/$(whoami)/.kube/config"
 fi
 }
 
