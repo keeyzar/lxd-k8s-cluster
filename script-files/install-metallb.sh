@@ -36,15 +36,18 @@ kubectl expose pod nginx --type=LoadBalancer --port=80
 count=0
 external_ip="";
 while true; do
-  sleep 5
+  sleep 1
   external_ip=$(kubectl get svc nginx --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}");
-  if [[ $external_ip -eq "" ]]; then
+  echo "uhm"
+  echo $external_ip
+  if [[ -n "$external_ip" ]]; then
     count=$((count+1))
+    break
   fi
-
+  echo "buhm"
   if [[ $count -gt 3 ]]; then
     echo "we waited long enough for the ip address, should already be finished.. stopping"
-    break
+    return 1
   fi
 done;
 
