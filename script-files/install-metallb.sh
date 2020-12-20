@@ -31,6 +31,8 @@ EOF
 
 function check_functionality_of_metallb(){
 echo "creating and exposing nginx with loadbalancer"
+#shortly sleeping, allowing rbac rules to take effect
+sleep 5
 kubectl run nginx --image nginx --labels app=nginx
 kubectl expose pod nginx --type=LoadBalancer --port=80
 count=0
