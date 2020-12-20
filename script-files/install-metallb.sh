@@ -57,8 +57,8 @@ echo "checking whether or not load balancer is accessible"
 curl --connect-timeout 10 "$external_ip" > /dev/null 2>&1 && works=1
 
 echo "deleting pod and service in background"
-kubectl delete pod nginx > /dev/null 2>&1 &
-kubectl delete service nginx > /dev/null 2>&1 &
+nohup kubectl delete pod nginx > /dev/null 2>&1
+nohup kubectl delete service nginx > /dev/null 2>&1
 
 if [[ $works -eq 1 ]]; then
   echo "metallb works"
