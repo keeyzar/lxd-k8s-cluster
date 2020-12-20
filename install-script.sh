@@ -131,6 +131,9 @@ function full_install_nfs(){
   fi
 }
 
+
+sudo echo "requesting sudo once before installation is done, so it's not triggered within installation"
+
 if [[ "x$1" = "xTrue" ]]; then
   echo "requested to install lxd, starting."
   if ! install_lxd_fully; then
